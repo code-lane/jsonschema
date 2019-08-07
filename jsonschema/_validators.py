@@ -1,4 +1,5 @@
 import re
+import jsonpointer
 
 from jsonschema._utils import (
     ensure_list,
@@ -245,9 +246,17 @@ def enum(validator, enums, instance, schema):
         unbooled = unbool(instance)
         if all(unbooled != unbool(each) for each in enums):
             yield ValidationError("%r is not one of %r" % (instance, enums))
+    elif isinstance(enums, dict):
+        data_enums = jsonpointer.resolve_pointer(validator.root_instance, enums['$data'])
+
+        if not isinstance(data_enums, list):
+            yield ValidationError("Path %s needs to be of type list to be used as enum!" % enums['$data'])
+        elif instance not in data_enums:
+            yield ValidationError("%r is not one of %r" % (instance, data_enums))
+
+        pass
     elif instance not in enums:
         yield ValidationError("%r is not one of %r" % (instance, enums))
-
 
 def ref(validator, ref, instance, schema):
     resolve = getattr(validator.resolver, "resolve", None)

@@ -107,7 +107,20 @@
         "contains": { "$ref": "#" },
         "maxProperties": { "$ref": "#/definitions/nonNegativeInteger" },
         "minProperties": { "$ref": "#/definitions/nonNegativeIntegerDefault0" },
-        "required": { "$ref": "#/definitions/stringArray" },
+        "required": {
+            "oneOf": [{
+                "$ref": "#/definitions/stringArray"
+            }, {
+                "type": "object",
+                "properties": {
+                    "$data": {
+                        "type": "string"
+                    }
+                },
+                "required": ["$data"]
+            }]
+        },
+
         "additionalProperties": { "$ref": "#" },
         "definitions": {
             "type": "object",

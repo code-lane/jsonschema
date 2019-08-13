@@ -300,6 +300,10 @@ def properties(validator, properties, instance, schema):
 def required(validator, required, instance, schema):
     if not validator.is_type(instance, "object"):
         return
+
+    if isinstance(required, dict):
+        required = jsonpointer.resolve_pointer(validator.root_instance, required['$data'])
+
     for property in required:
         if property not in instance:
             yield ValidationError("%r is a required property" % property)

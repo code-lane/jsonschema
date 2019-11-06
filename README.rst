@@ -12,9 +12,9 @@ jsonschema
    :alt: Supported Python versions
    :target: https://pypi.org/project/jsonschema/
 
-.. |Travis| image:: https://travis-ci.org/Julian/jsonschema.svg?branch=master
+.. |Travis| image:: https://travis-ci.com/Julian/jsonschema.svg?branch=master
    :alt: Travis build status
-   :target: https://travis-ci.org/Julian/jsonschema
+   :target: https://travis-ci.com/Julian/jsonschema
 
 .. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/adtt0aiaihy6muyn/branch/master?svg=true
    :alt: AppVeyor build status
@@ -74,7 +74,7 @@ Features
 * `Lazy validation <https://python-jsonschema.readthedocs.io/en/latest/validate/#jsonschema.IValidator.iter_errors>`_
   that can iteratively report *all* validation errors.
 
-* `Programmatic querying <https://python-jsonschema.readthedocs.io/en/latest/errors/#module-jsonschema>`_
+* `Programmatic querying <https://python-jsonschema.readthedocs.io/en/latest/errors/>`_
   of which properties or items failed validation.
 
 
@@ -103,21 +103,16 @@ Online demo Notebook will look similar to this:
 
 .. image:: https://user-images.githubusercontent.com/1155573/56820861-5c1c1880-6823-11e9-802a-ce01c5ec574f.gif
     :alt: Open Live Demo
-    :width: 50 px
-    :scale: 10 %
-
+    :width: 480 px
 
 
 Release Notes
 -------------
 
-Version 3.0 brings support for Draft 7 (and 6). The interface for redefining
-types has also been majorly overhauled to support easier redefinition of the
-types a Validator will accept or allow.
-
-jsonschema is also now tested under Windows via AppVeyor.
-
-Thanks to all who contributed pull requests along the way.
+v3.1 brings support for ECMA 262 dialect regular expressions
+throughout schemas, as recommended by the specification. Big
+thanks to @Zac-HD for authoring support in a new `js-regex
+<https://pypi.org/project/js-regex/>`_ library.
 
 
 Running the Test Suite

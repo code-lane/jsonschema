@@ -14,8 +14,7 @@ import attr
 
 from jsonschema import FormatChecker, TypeChecker, exceptions, validators
 from jsonschema.compat import PY3, pathname2url
-from jsonschema.tests.helpers import bug
-import jsonschema
+from jsonschema.tests._helpers import bug
 
 
 def startswith(validator, startswith, instance, schema):
@@ -1155,7 +1154,6 @@ class ValidatorTestMixin(MetaSchemaTestsMixin, object):
         """
         Legacy RefResolvers support only the context manager form of
         resolution.
-
         """
 
         class LegacyRefResolver(object):
@@ -1183,6 +1181,12 @@ class ValidatorTestMixin(MetaSchemaTestsMixin, object):
     @unittest.skipIf(PY3, "In Python 3 json.load always produces unicode")
     def test_string_a_bytestring_is_a_string(self):
         self.Validator({"type": "string"}).validate(b"foo")
+
+    def test_patterns_can_be_native_strings(self):
+        """
+        See https://github.com/Julian/jsonschema/issues/611.
+        """
+        self.Validator({"pattern": "foo"}).validate("foo")
 
     def test_it_can_validate_with_decimals(self):
         schema = {"items": {"type": "number"}}
@@ -1347,35 +1351,6 @@ class TestDraft7Validator(ValidatorTestMixin, TestCase):
     Validator = validators.Draft7Validator
     valid = {}, {}
     invalid = {"type": "integer"}, "foo"
-
-
-class TestBuiltinFormats(TestCase):
-    """
-    The built-in (specification-defined) formats do not raise type errors.
-
-    If an instance or value is not a string, it should be ignored.
-    """
-
-    # These tests belong upstream.
-    # See https://github.com/json-schema-org/JSON-Schema-Test-Suite/issues/246
-
-
-for Validator, checker in (
-    (validators.Draft3Validator, jsonschema.draft3_format_checker),
-    (validators.Draft4Validator, jsonschema.draft4_format_checker),
-    (validators.Draft6Validator, jsonschema.draft6_format_checker),
-    (validators.Draft7Validator, jsonschema.draft7_format_checker),
-):
-    for format in checker.checkers:
-        def test(self, checker=checker, format=format):
-            validator = Validator({"format": format}, format_checker=checker)
-            validator.validate(123)
-
-        name = "test_{}_{}_ignores_non_strings".format(
-            Validator.__name__, format,
-        )
-        test.__name__ = name
-        setattr(TestBuiltinFormats, name, test)
 
 
 class TestValidatorFor(SynchronousTestCase):

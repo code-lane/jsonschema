@@ -12,7 +12,8 @@ import certifi
 from lxml import html
 
 
-VALIDATION_SPEC = "https://json-schema.org/draft-04/json-schema-validation.html"
+__version__ = "1.0.0"
+VALIDATION_SPEC = "https://json-schema.org/draft-07/json-schema-validation.html"
 
 
 def setup(app):
@@ -24,7 +25,6 @@ def setup(app):
         app (sphinx.application.Sphinx):
 
             the Sphinx application context
-
     """
 
     app.add_config_value("cache_path", "_cache", "")
@@ -39,6 +39,8 @@ def setup(app):
     spec = fetch_or_load(path)
     app.add_role("validator", docutils_sucks(spec))
 
+    return dict(version=__version__, parallel_read_safe=True)
+
 
 def fetch_or_load(spec_path):
     """
@@ -49,7 +51,6 @@ def fetch_or_load(spec_path):
         cache_path:
 
             the path to a cached specification
-
     """
 
     headers = {}
@@ -81,12 +82,11 @@ def docutils_sucks(spec):
 
     It doesn't allow using a class because it does stupid stuff like try to set
     attributes on the callable object rather than just keeping a dict.
-
     """
 
     base_url = VALIDATION_SPEC
-    ref_url = "https://json-schema.org/draft-04/json-schema-core.html#rfc.section.4.1"
-    schema_url = "https://json-schema.org/draft-04/json-schema-core.html#rfc.section.6"
+    ref_url = "https://json-schema.org/draft-07/json-schema-core.html#rfc.section.8.3"
+    schema_url = "https://json-schema.org/draft-07/json-schema-core.html#rfc.section.7"
 
     def validator(name, raw_text, text, lineno, inliner):
         """
@@ -120,7 +120,6 @@ def docutils_sucks(spec):
 
                 a 2-tuple of nodes to insert into the document and an
                 iterable of system messages, both possibly empty
-
         """
 
         if text == "$ref":
